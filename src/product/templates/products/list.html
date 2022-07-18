@@ -4,56 +4,56 @@
 
 {% block content %}
 
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Products</h1>
-    </div>
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Products</h1>
+</div>
 
 
-    <div class="card">
-        <form action="" method="get" class="card-header">
-            <div class="form-row justify-content-between">
-                <div class="col-md-2">
-                    <input type="text" name="title" placeholder="Product Title" class="form-control">
-                </div>
-                <div class="col-md-2">
-                    <select name="variant" id="" class="form-control">
-                        <option selected disabled>--Select A Variant--</option>
+<div class="card">
+    <form action="" method="get" class="card-header">
+        <div class="form-row justify-content-between">
+            <div class="col-md-2">
+                <input type="text" name="title" placeholder="Product Title" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <select name="variant" id="" class="form-control">
+                    <option selected disabled>--Select A Variant--</option>
 
-                    </select>
-                </div>
+                </select>
+            </div>
 
-                <div class="col-md-3">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">Price Range</span>
-                        </div>
-                        <input type="text" name="price_from" aria-label="First name" placeholder="From"
-                               class="form-control">
-                        <input type="text" name="price_to" aria-label="Last name" placeholder="To" class="form-control">
+            <div class="col-md-3">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Price Range</span>
                     </div>
-                </div>
-                <div class="col-md-2">
-                    <input type="date" name="date" placeholder="Date" class="form-control">
-                </div>
-                <div class="col-md-1">
-                    <button type="submit" class="btn btn-primary float-right"><i class="fa fa-search"></i></button>
+                    <input type="text" name="price_from" aria-label="First name" placeholder="From"
+                           class="form-control">
+                    <input type="text" name="price_to" aria-label="Last name" placeholder="To" class="form-control">
                 </div>
             </div>
-        </form>
+            <div class="col-md-2">
+                <input type="date" name="date" placeholder="Date" class="form-control">
+            </div>
+            <div class="col-md-1">
+                <button type="submit" class="btn btn-primary float-right"><i class="fa fa-search"></i></button>
+            </div>
+        </div>
+    </form>
 
-        <div class="card-body">
-            <div class="table-response">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Variant</th>
-                        <th width="150px">Action</th>
-                    </tr>
-                    </thead>
-                    {% for product in products %}
+    <div class="card-body">
+        <div class="table-response">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Variant</th>
+                    <th width="150px">Action</th>
+                </tr>
+                </thead>
+                {% for product in products %}
                     <tbody>
                     <tr>
                         <td>{{ product.id }}</td>
@@ -71,7 +71,7 @@
                                     </dl>
                                 </dd>
                                 <dt class="col-sm-3 pb-0">
-                                    {{ product.product_variant_two_title}}
+                                    {{ product.product_variant_two_title }}
                                 </dt>
                                 <dd class="col-sm-9">
                                     <dl class="row mb-0">
@@ -90,7 +90,8 @@
                                     </dl>
                                 </dd>
                             </dl>
-                            <button onclick="$('#variant').toggleClass('h-auto')" class="btn btn-sm btn-link">Show more
+                            <button onclick="$('#variant').toggleClass('h-auto')" class="btn btn-sm btn-link">Show
+                                more
                             </button>
                         </td>
                         <td>
@@ -100,21 +101,48 @@
                         </td>
                     </tr>
                     </tbody>
-                    {% endfor %}
-                </table>
-            </div>
-
+                {% endfor %}
+            </table>
         </div>
 
-        <div class="card-footer">
-            <div class="row justify-content-between">
-                <div class="col-md-6">
-                    <p>Showing 1 to 10 out of 100</p>
-                </div>
-                <div class="col-md-2">
+    </div>
 
-                </div>
+    <div class="card-footer">
+        <div class="row justify-content-between">
+            <div class="col-md-6">
+                    <span class="current">
+                        Showing Page {{ products.number }} out of {{ products.paginator.num_pages }}.
+                    </span>
+                {% if products.has_other_pages %}
+                    <div class="btn-group" role="group" aria-label="Item pagination">
+                        {% if products.has_previous %}
+                            <a href="?page={{ products.previous_page_number }}" class="btn btn-outline-primary">&laquo;</a>
+                        {% endif %}
+
+                        {% for page_number in products.paginator.page_range %}
+                            {% if products.number == page_number %}
+                                <button class="btn btn-outline-primary active">
+                                    <span>{{ page_number }} <span class="sr-only">(current)</span></span>
+                                </button>
+                            {% else %}
+                                <a href="?page={{ page_number }}" class="btn btn-outline-primary">
+                                    {{ page_number }}
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if products.has_next %}
+                            <a href="?page={{ products.next_page_number }}"
+                               class="btn btn-outline-primary">&raquo;</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+            </div>
+            <div class="col-md-2">
+
             </div>
         </div>
     </div>
+</div>
 {% endblock %}

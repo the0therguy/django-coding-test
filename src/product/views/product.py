@@ -2,7 +2,7 @@ import datetime
 
 from django.shortcuts import render
 from django.views import generic
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from product.models import Variant
 from product.models import *
 
@@ -23,14 +23,9 @@ def product_list(request):
     products = ProductVariantPrice.objects.all()
     all_data = []
 
-
     for i in products:
-        p = {}
-        # print(i.__dict__)
-        p['id'] = i.id
-        p['created_at'] = abs(datetime.datetime.now(datetime.timezone.utc) - i.created_at).days*24
-        p['price'] = i.price
-        p['stock'] = i.stock
+        p = {'id': i.id, 'created_at': abs(datetime.datetime.now(datetime.timezone.utc) - i.created_at).days * 24,
+             'price': i.price, 'stock': i.stock}
         if i.product_variant_one_id is not None:
             p['product_variant_one_title'] = i.product_variant_one.variant_title
         if i.product_variant_two_id is not None:
@@ -41,5 +36,14 @@ def product_list(request):
         p['product_title'] = i.product.title
         all_data.append(p)
 
-    context = {'products': all_data}
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(all_data, 5)
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        products = paginator.page(1)
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)
+    context = {'products': products}
     return render(request, 'products/list.html', context=context)
