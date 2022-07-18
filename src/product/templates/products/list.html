@@ -53,48 +53,40 @@
                         <th width="150px">Action</th>
                     </tr>
                     </thead>
-
+                    {% for product in products %}
                     <tbody>
                     <tr>
-                        <td>1</td>
-                        <td>T-Shirt <br> Created at : 25-Aug-2020</td>
-                        <td>Quality product in low cost</td>
+                        <td>{{ product.id }}</td>
+                        <td>{{ product.product_title }} <br> Created at : {{ product.created_at }} hours ago</td>
+                        <td>{{ product.description }}</td>
                         <td>
                             <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant">
                                 <dt class="col-sm-3 pb-0">
-                                    XL/ Black/ Full
+                                    {{ product.product_variant_one_title }}
                                 </dt>
                                 <dd class="col-sm-9">
                                     <dl class="row mb-0">
-                                        <dd class="col-sm-4 pb-0">Price : 200.0</dd>
-                                        <dd class="col-sm-8 pb-0">InStock : 50.</dd>
+                                        <dd class="col-sm-4 pb-0">Price : {{ product.price }}</dd>
+                                        <dd class="col-sm-8 pb-0">InStock : {{ product.stock }}</dd>
                                     </dl>
                                 </dd>
                                 <dt class="col-sm-3 pb-0">
-                                    XL/ Black/ Half
+                                    {{ product.product_variant_two_title}}
                                 </dt>
                                 <dd class="col-sm-9">
                                     <dl class="row mb-0">
-                                        <dd class="col-sm-4 pb-0">Price : 200.0</dd>
-                                        <dd class="col-sm-8 pb-0">InStock : 50.</dd>
+                                        <dd class="col-sm-4 pb-0">Price : {{ product.price }}</dd>
+                                        <dd class="col-sm-8 pb-0">InStock : {{ product.stock }}</dd>
                                     </dl>
+
                                 </dd>
                                 <dt class="col-sm-3 pb-0">
-                                    L/ Black/ Full
+                                    {{ product.product_variant_three_title }}
                                 </dt>
                                 <dd class="col-sm-9">
                                     <dl class="row mb-0">
-                                        <dd class="col-sm-4 pb-0">Price : 200.0</dd>
-                                        <dd class="col-sm-8 pb-0">InStock : 50.</dd>
-                                    </dl>
-                                </dd>
-                                <dt class="col-sm-3 pb-0">
-                                    L/ Black/ Half
-                                </dt>
-                                <dd class="col-sm-9">
-                                    <dl class="row mb-0">
-                                        <dd class="col-sm-4 pb-0">Price : 200.0</dd>
-                                        <dd class="col-sm-8 pb-0">InStock : 50.</dd>
+                                        <dd class="col-sm-4 pb-0">Price : {{ product.price }}</dd>
+                                        <dd class="col-sm-8 pb-0">InStock : {{ product.stock }}</dd>
                                     </dl>
                                 </dd>
                             </dl>
@@ -108,7 +100,7 @@
                         </td>
                     </tr>
                     </tbody>
-
+                    {% endfor %}
                 </table>
             </div>
 
