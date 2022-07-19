@@ -13,13 +13,18 @@
     <form action="" method="get" class="card-header">
         <div class="form-row justify-content-between">
             <div class="col-md-2">
-                <input type="text" name="title" placeholder="Product Title" class="form-control">
+                <input type="text" name="title" placeholder="Product Title" class="form-control" id = "">
             </div>
             <div class="col-md-2">
                 <select name="variant" id="" class="form-control">
-                    <option selected disabled>--Select A Variant--</option>
+                    <option selected disabled>----Select a Variant---</option>
+                    {% for variant in variants %}
+                        <option selected disabled>{{ variant.variant.title }}</option>
+                        <option>{{ variant }}</option>
+                    {% endfor %}
 
                 </select>
+
             </div>
 
             <div class="col-md-3">
@@ -27,13 +32,13 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text">Price Range</span>
                     </div>
-                    <input type="text" name="price_from" aria-label="First name" placeholder="From"
+                    <input type="number" name="price_from" aria-label="First name" placeholder="From"
                            class="form-control">
-                    <input type="text" name="price_to" aria-label="Last name" placeholder="To" class="form-control">
+                    <input type="number" name="price_to" aria-label="Last name" placeholder="To" class="form-control">
                 </div>
             </div>
             <div class="col-md-2">
-                <input type="date" name="date" placeholder="Date" class="form-control">
+                <input type="date" name="date" value="{{ request }}" placeholder="Date" class="form-control">
             </div>
             <div class="col-md-1">
                 <button type="submit" class="btn btn-primary float-right"><i class="fa fa-search"></i></button>
@@ -53,7 +58,8 @@
                     <th width="150px">Action</th>
                 </tr>
                 </thead>
-                {% for product in products %}
+{#                {% for product in productvariantprice_list %}#}
+                    {% for product in products %}
                     <tbody>
                     <tr>
                         <td>{{ product.id }}</td>
@@ -113,6 +119,7 @@
                     <span class="current">
                         Showing Page {{ products.number }} out of {{ products.paginator.num_pages }}.
                     </span>
+            <div>
                 {% if products.has_other_pages %}
                     <div class="btn-group" role="group" aria-label="Item pagination">
                         {% if products.has_previous %}
@@ -137,6 +144,7 @@
                         {% endif %}
                     </div>
                 {% endif %}
+            </div>
 
             </div>
             <div class="col-md-2">

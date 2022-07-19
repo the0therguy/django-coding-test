@@ -14,12 +14,12 @@ const CreateProduct = (props) => {
             tags: []
         }
     ])
-    console.log(typeof props.variants)
+    console.log("dd",typeof props.variants)
     // handle click event of the Add button
     const handleAddClick = () => {
         let all_variants = JSON.parse(props.variants.replaceAll("'", '"')).map(el => el.id)
         let selected_variants = productVariants.map(el => el.option);
-        let available_variants = all_variants.filter(entry1 => !selected_variants.some(entry2 => entry1 == entry2))
+        let available_variants = all_variants.filter(entry1 => !selected_variants.some(entry2 => entry1 === entry2))
         setProductVariant([...productVariants, {
             option: available_variants[0],
             tags: []
@@ -77,6 +77,7 @@ const CreateProduct = (props) => {
     // Save product
     let saveProduct = (event) => {
         event.preventDefault();
+        console.log(productVariantPrices)
         // TODO : write your code here to save the product
     }
 
@@ -90,15 +91,15 @@ const CreateProduct = (props) => {
                             <div className="card-body">
                                 <div className="form-group">
                                     <label htmlFor="">Product Name</label>
-                                    <input type="text" placeholder="Product Name" className="form-control"/>
+                                    <input type="text" name="product_name" placeholder="Product Name" className="form-control"/>
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="">Product SKU</label>
-                                    <input type="text" placeholder="Product Name" className="form-control"/>
+                                    <input type="text" name="product_sku" placeholder="Product Name" className="form-control"/>
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="">Description</label>
-                                    <textarea id="" cols="30" rows="4" className="form-control"></textarea>
+                                    <textarea id="" cols="30" rows="4" name="description" className="form-control"></textarea>
                                 </div>
                             </div>
                         </div>

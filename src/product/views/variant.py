@@ -18,14 +18,16 @@ class VariantView(BaseVariantView, ListView):
 
     def get_queryset(self):
         filter_string = {}
-        print(self.request.GET)
+        print(self)
         for key in self.request.GET:
             if self.request.GET.get(key):
                 filter_string[key] = self.request.GET.get(key)
+        print(25, filter_string)
         return Variant.objects.filter(**filter_string)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        print(34, context)
         context['product'] = True
         context['request'] = ''
         if self.request.GET:
