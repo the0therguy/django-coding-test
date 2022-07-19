@@ -32,11 +32,8 @@ class CreateProductView(generic.CreateView):
 def product_list(request):
 
     all_data = []
-    variants = ProductVariant.objects.all().order_by('variant__title')
-    # print(variants)
     v = ProductVariant.objects.values('variant_title', 'variant__title').order_by('variant__title').annotate(dcount=Count('variant_title'))
     data = {}
-    print(request.GET)
 
     for i in v:
         if i['variant__title'] not in data:
@@ -44,7 +41,6 @@ def product_list(request):
 
         else:
             data[i['variant__title']].append(i['variant_title'])
-    print(data)
     search = {}
 
     if request.GET.get('title') != "":
@@ -57,7 +53,7 @@ def product_list(request):
         date_format = '%Y-%m-%d'
         search['created_at'] = datetime.datetime.strptime(request.GET.get('date'), date_format)
 
-    if search and len(request.GET) > 0:
+    if search and len(request.GET) == 4:
         # print(search)
         products = ProductVariantPrice.objects.filter(**search)
         for i in products:
@@ -72,6 +68,19 @@ def product_list(request):
             p['description'] = i.product.description
             p['product_title'] = i.product.title
             all_data.append(p)
+
+        page = request.GET.get('page', 1)
+
+        paginator = Paginator(all_data, 5)
+        try:
+            products = paginator.page(page)
+        except PageNotAnInteger:
+            products = paginator.page(1)
+        except EmptyPage:
+            products = paginator.page(paginator.num_pages)
+        context = {'products': products, 'variants': data}
+        return render(request, 'products/list.html', context=context)
+
 
     else:
         products = ProductVariantPrice.objects.all()
@@ -88,45 +97,20 @@ def product_list(request):
             p['product_title'] = i.product.title
             all_data.append(p)
 
-    page = request.GET.get('page', 1)
+        page = request.GET.get('page', 1)
 
-    paginator = Paginator(all_data, 5)
-    try:
-        products = paginator.page(page)
-    except PageNotAnInteger:
-        products = paginator.page(1)
-    except EmptyPage:
-        products = paginator.page(paginator.num_pages)
-    context = {'products': products, 'variants': variants}
-    return render(request, 'products/list.html', context=context)
+        paginator = Paginator(all_data, 5)
+        try:
+            products = paginator.page(page)
+        except PageNotAnInteger:
+            products = paginator.page(1)
+        except EmptyPage:
+            products = paginator.page(paginator.num_pages)
+        context = {'products': products, 'variants': data}
+        return render(request, 'products/list.html', context=context)
 
 
 class BasedProductVariantPriceView(generic.View):
     model = ProductVariantPrice
     template_name = 'products/create.html'
     success_url = '/product/'
-
-
-class ProductVariantPriceView(BasedProductVariantPriceView, ListView):
-    template_name = 'products/list.html'
-    paginate_by = 5
-
-    def get_queryset(self):
-        filter_string = {}
-        print(self)
-        for key in self.request.GET:
-            if self.GET.get(key):
-                filter_string[key] = self.request.GET.get(key)
-        return ProductVariantPrice.objects.filter(**filter_string)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['product'] = True
-        context['request'] = ''
-        if self.request.GET:
-            context['request'] = self.request.GET['title']
-
-        for i in context['productvariantprice_list']:
-            print(i.__dict__)
-
-        return context

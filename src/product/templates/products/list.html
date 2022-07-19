@@ -18,9 +18,14 @@
             <div class="col-md-2">
                 <select name="variant" id="" class="form-control">
                     <option selected disabled>----Select a Variant---</option>
-                    {% for variant in variants %}
-                        <option selected disabled>{{ variant.variant.title }}</option>
-                        <option>{{ variant }}</option>
+
+                    {% for key, values in variants.items %}
+{#                        <option selected disabled>{{ variant.variant.title }}</option>#}
+                        <option selected disabled>{{ key }}</option>
+                        {% for v in values %}
+                            <option>{{v}}</option>
+                        {% endfor %}
+
                     {% endfor %}
 
                 </select>
