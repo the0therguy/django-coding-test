@@ -14,7 +14,7 @@ const CreateProduct = (props) => {
             tags: []
         }
     ])
-    console.log("dd",typeof props.variants)
+    console.log(typeof props.variants)
     // handle click event of the Add button
     const handleAddClick = () => {
         let all_variants = JSON.parse(props.variants.replaceAll("'", '"')).map(el => el.id)
@@ -68,17 +68,41 @@ const CreateProduct = (props) => {
         if (!arr.length) {
             return pre;
         }
-        let ans = arr[0].reduce(function (ans, value) {
+        return arr[0].reduce(function (ans, value) {
             return ans.concat(getCombn(arr.slice(1), pre + value + '/'));
         }, []);
-        return ans;
     }
 
     // Save product
-    let saveProduct = (event) => {
+    let saveProduct = async (event) => {
         event.preventDefault();
         console.log(productVariantPrices)
         // TODO : write your code here to save the product
+        let response = await fetch(`http://127.0.0.1:8000/product/create/`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                'product_name': event.target.product_name.value(),
+                'product_sku': event.target.product_sku.value(),
+                'product_description': event.target.product_description.value(),
+                'product_image':event.target.product_image.value(),
+                'product_variant': productVariants,
+                'product_variant_prices': productVariantPrices
+            })
+        })
+
+        let data = await response.json()
+        if (response.status===201)
+        {
+            window.alert('Products created succesfully')
+        }
+        else
+        {
+            window.alert("Products creation failed")
+        }
+
     }
 
 
@@ -91,15 +115,18 @@ const CreateProduct = (props) => {
                             <div className="card-body">
                                 <div className="form-group">
                                     <label htmlFor="">Product Name</label>
-                                    <input type="text" name="product_name" placeholder="Product Name" className="form-control"/>
+                                    <input type="text" name="product_name" placeholder="Product Name"
+                                           className="form-control"/>
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="">Product SKU</label>
-                                    <input type="text" name="product_sku" placeholder="Product Name" className="form-control"/>
+                                    <input type="text" name="product_sku" placeholder="Product Name"
+                                           className="form-control"/>
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="">Description</label>
-                                    <textarea id="" cols="30" rows="4" name="description" className="form-control"></textarea>
+                                    <textarea id="" cols="30" rows="4" name="description"
+                                              className="form-control"></textarea>
                                 </div>
                             </div>
                         </div>

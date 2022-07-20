@@ -7,30 +7,25 @@ from django.views.generic import ListView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from product.models import Variant, ProductVariantPrice, Product, ProductVariant
 from product.forms import VariantForm, ProductForm
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 
-class CreateProductView(generic.CreateView):
+class CreateProductView(generic.TemplateView):
     template_name = 'products/create.html'
     form_name = ProductForm
 
     def get_context_data(self, **kwargs):
-        print(self.request)
-        if self.request.method == "POST":
-            print(19, " anjdanjda")
-            form = ProductForm(self.request.POST)
-            if form.is_valid():
-                print(form)
         context = super(CreateProductView, self).get_context_data(**kwargs)
         print(context)
         variants = Variant.objects.filter(active=True).values('id', 'title')
         context['product'] = True
         context['variants'] = list(variants.all())
-        print(context)
         return context
 
 
 def product_list(request):
-
     all_data = []
     v = ProductVariant.objects.values('variant_title', 'variant__title').order_by('variant__title').annotate(dcount=Count('variant_title'))
     data = {}
@@ -53,8 +48,7 @@ def product_list(request):
         date_format = '%Y-%m-%d'
         search['created_at'] = datetime.datetime.strptime(request.GET.get('date'), date_format)
 
-    if search and len(request.GET) == 4:
-        # print(search)
+    if search and len(request.GET) >= 4:
         products = ProductVariantPrice.objects.filter(**search)
         for i in products:
             p = {'id': i.id, 'created_at': abs(datetime.datetime.now(datetime.timezone.utc) - i.created_at).days * 24,
@@ -108,9 +102,3 @@ def product_list(request):
             products = paginator.page(paginator.num_pages)
         context = {'products': products, 'variants': data}
         return render(request, 'products/list.html', context=context)
-
-
-class BasedProductVariantPriceView(generic.View):
-    model = ProductVariantPrice
-    template_name = 'products/create.html'
-    success_url = '/product/'
